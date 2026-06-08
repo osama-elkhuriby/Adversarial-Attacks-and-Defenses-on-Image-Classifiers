@@ -1,14 +1,9 @@
 """
 CIFAR-10 Ablation Study Script
-=================================
 Runs two ablation experiments on PGD-based adversarial training
 for CIFAR-10 (reduced scope for CPU feasibility):
-
     1. Effect of PGD inner steps during training (3, 7 steps)
     2. Effect of training epochs (10, 15 epochs)
-
-Usage:
-    python ablation_study_cifar.py
 """
 
 import sys
@@ -30,9 +25,8 @@ from tqdm import tqdm
 from models.cifar_cnn import CifarCNN
 from attacks.pgd import pgd_attack
 
-# ──────────────────────────────────────────────────────────────
-#  Configuration
-# ──────────────────────────────────────────────────────────────
+# Configuration
+
 SEED = 42
 BATCH_SIZE = 64
 LEARNING_RATE = 1e-3
@@ -144,7 +138,7 @@ def train_pgd_at(
         running_loss = 0.0
 
         for images, labels in tqdm(train_loader,
-                                   desc=f"    Epoch {epoch+1}/{epochs}",
+                                   desc=f"Epoch {epoch+1}/{epochs}",
                                    leave=False):
             images, labels = images.to(device), labels.to(device)
 
