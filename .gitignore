@@ -1,0 +1,42 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Conda / Virtual envs
+.conda/
+.venv/
+
+# Jupyter
+
+# Data (auto-downloaded)
+src/data/
+MNIST_CIFAR10
+# Generated outputs (reproducible via scripts)
+# src/results/
+# src/reports/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# LaTeX build artifacts
+*.aux
+*.log
+*.out
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+
+data/
+results/checkpoints/
+*.pth
+*.tar.gz
+*.gz
+Miniconda3-latest-Linux-x86_64.sh

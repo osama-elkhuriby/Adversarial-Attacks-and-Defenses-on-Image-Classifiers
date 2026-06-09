@@ -1,0 +1,41 @@
+{
+  "epochs": [
+    {
+      "epoch": 1,
+      "avg_loss": 0.2003,
+      "val_accuracy": 97.74,
+      "test_accuracy": 98.09
+    },
+    {
+      "epoch": 2,
+      "avg_loss": 0.0547,
+      "val_accuracy": 98.49,
+      "test_accuracy": 98.66
+    },
+    {
+      "epoch": 3,
+      "avg_loss": 0.0357,
+      "val_accuracy": 98.68,
+      "test_accuracy": 98.96
+    },
+    {
+      "epoch": 4,
+      "avg_loss": 0.0288,
+      "val_accuracy": 98.92,
+      "test_accuracy": 98.99
+    },
+    {
+      "epoch": 5,
+      "avg_loss": 0.0209,
+      "val_accuracy": 98.62,
+      "test_accuracy": 98.79
+    }
+  ],
+  "seed": 42,
+  "hyperparameters": {
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "optimizer": "Adam",
+    "epochs": 5
+  }
+}
