@@ -1,0 +1,194 @@
+{
+  "Baseline": {
+    "clean_accuracy": 76.75,
+    "fgsm_results": [
+      {
+        "epsilon": 0.007843,
+        "epsilon_fraction": "2/255",
+        "accuracy": 19.55
+      },
+      {
+        "epsilon": 0.015686,
+        "epsilon_fraction": "4/255",
+        "accuracy": 7.49
+      },
+      {
+        "epsilon": 0.031373,
+        "epsilon_fraction": "8/255",
+        "accuracy": 2.74
+      },
+      {
+        "epsilon": 0.062745,
+        "epsilon_fraction": "16/255",
+        "accuracy": 2.03
+      }
+    ],
+    "pgd_results": [
+      {
+        "epsilon": 0.015686,
+        "epsilon_fraction": "4/255",
+        "alpha": 0.007843,
+        "iters": 10,
+        "accuracy": 0.39
+      },
+      {
+        "epsilon": 0.031373,
+        "epsilon_fraction": "8/255",
+        "alpha": 0.007843,
+        "iters": 20,
+        "accuracy": 0.0
+      },
+      {
+        "epsilon": 0.062745,
+        "epsilon_fraction": "16/255",
+        "alpha": 0.007843,
+        "iters": 40,
+        "accuracy": 0.0
+      }
+    ]
+  },
+  "FGSM-AT": {
+    "clean_accuracy": 57.41,
+    "fgsm_results": [
+      {
+        "epsilon": 0.007843,
+        "epsilon_fraction": "2/255",
+        "accuracy": 51.55
+      },
+      {
+        "epsilon": 0.015686,
+        "epsilon_fraction": "4/255",
+        "accuracy": 46.08
+      },
+      {
+        "epsilon": 0.031373,
+        "epsilon_fraction": "8/255",
+        "accuracy": 36.61
+      },
+      {
+        "epsilon": 0.062745,
+        "epsilon_fraction": "16/255",
+        "accuracy": 22.42
+      }
+    ],
+    "pgd_results": [
+      {
+        "epsilon": 0.015686,
+        "epsilon_fraction": "4/255",
+        "alpha": 0.007843,
+        "iters": 10,
+        "accuracy": 45.03
+      },
+      {
+        "epsilon": 0.031373,
+        "epsilon_fraction": "8/255",
+        "alpha": 0.007843,
+        "iters": 20,
+        "accuracy": 32.91
+      },
+      {
+        "epsilon": 0.062745,
+        "epsilon_fraction": "16/255",
+        "alpha": 0.007843,
+        "iters": 40,
+        "accuracy": 11.75
+      }
+    ]
+  },
+  "PGD-AT": {
+    "clean_accuracy": 59.7,
+    "fgsm_results": [
+      {
+        "epsilon": 0.007843,
+        "epsilon_fraction": "2/255",
+        "accuracy": 52.92
+      },
+      {
+        "epsilon": 0.015686,
+        "epsilon_fraction": "4/255",
+        "accuracy": 46.53
+      },
+      {
+        "epsilon": 0.031373,
+        "epsilon_fraction": "8/255",
+        "accuracy": 35.65
+      },
+      {
+        "epsilon": 0.062745,
+        "epsilon_fraction": "16/255",
+        "accuracy": 20.0
+      }
+    ],
+    "pgd_results": [
+      {
+        "epsilon": 0.015686,
+        "epsilon_fraction": "4/255",
+        "alpha": 0.007843,
+        "iters": 10,
+        "accuracy": 45.68
+      },
+      {
+        "epsilon": 0.031373,
+        "epsilon_fraction": "8/255",
+        "alpha": 0.007843,
+        "iters": 20,
+        "accuracy": 31.52
+      },
+      {
+        "epsilon": 0.062745,
+        "epsilon_fraction": "16/255",
+        "alpha": 0.007843,
+        "iters": 40,
+        "accuracy": 11.11
+      }
+    ]
+  },
+  "Mixed-AT": {
+    "clean_accuracy": 64.46,
+    "fgsm_results": [
+      {
+        "epsilon": 0.007843,
+        "epsilon_fraction": "2/255",
+        "accuracy": 56.34
+      },
+      {
+        "epsilon": 0.015686,
+        "epsilon_fraction": "4/255",
+        "accuracy": 48.56
+      },
+      {
+        "epsilon": 0.031373,
+        "epsilon_fraction": "8/255",
+        "accuracy": 35.41
+      },
+      {
+        "epsilon": 0.062745,
+        "epsilon_fraction": "16/255",
+        "accuracy": 18.79
+      }
+    ],
+    "pgd_results": [
+      {
+        "epsilon": 0.015686,
+        "epsilon_fraction": "4/255",
+        "alpha": 0.007843,
+        "iters": 10,
+        "accuracy": 46.94
+      },
+      {
+        "epsilon": 0.031373,
+        "epsilon_fraction": "8/255",
+        "alpha": 0.007843,
+        "iters": 20,
+        "accuracy": 29.68
+      },
+      {
+        "epsilon": 0.062745,
+        "epsilon_fraction": "16/255",
+        "alpha": 0.007843,
+        "iters": 40,
+        "accuracy": 7.49
+      }
+    ]
+  }
+}

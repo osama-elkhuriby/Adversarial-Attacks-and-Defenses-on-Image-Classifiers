@@ -15,7 +15,7 @@ build/
 
 # Data (auto-downloaded)
 src/data/
-
+MNIST_CIFAR10
 # Generated outputs (reproducible via scripts)
 # src/results/
 # src/reports/
@@ -40,3 +40,4 @@ results/checkpoints/
 *.pth
 *.tar.gz
 *.gz
+Miniconda3-latest-Linux-x86_64.sh
