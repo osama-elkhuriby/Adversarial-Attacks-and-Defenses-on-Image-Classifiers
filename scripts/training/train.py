@@ -22,10 +22,10 @@ SEED=42
 BATCH_SIZE = 64          # Mini-batch size for training and evaluation
 LEARNING_RATE = 1e-3     # Adam learning rate
 EPOCHS = 5               # Number of full passes over the training set
-DATA_DIR = "../../data"      # Root directory for MNIST data
+DATA_DIR = "data"      # Root directory for MNIST data
 CHECKPOINT_DIR = "../../results/checkpoints"
 CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "mnist_cnn.pth")
-METRICS_DIR = "../../results"
+METRICS_DIR = "METRICS_DIR"
 METRICS_PATH = os.path.join(METRICS_DIR, "training_metrics.json")
 
 
@@ -74,8 +74,8 @@ def train():
     # MNIST images are 28×28 grayscale; ToTensor() scales pixels to [0, 1]
     transform = transforms.ToTensor()
 
-    full_train_dataset = datasets.MNIST(root=DATA_DIR, train=True,download=True, transform=transform)
-    test_dataset = datasets.MNIST(root=DATA_DIR, train=False,download=True, transform=transform)
+    full_train_dataset = datasets.MNIST(root=DATA_DIR, train=True,download=False, transform=transform)
+    test_dataset = datasets.MNIST(root=DATA_DIR, train=False,download=False, transform=transform)
 
     # Split the 60k training set into 50k train / 10k validation
     train_dataset, val_dataset = random_split(
@@ -129,12 +129,9 @@ def train():
         })
 
     # Save Trained Model
-    os.makedirs(CHECKPOINT_DIR, exist_ok=True)
-    torch.save(model.state_dict(), CHECKPOINT_PATH)
-    print(f"\nModel checkpoint saved to: {CHECKPOINT_PATH}")
-
+    torch.save(model.state_dict(), "./CHECKPOINT_DIR/model_MNIST.pth")
+    print(f"\nModel checkpoint saved to: ./CHECKPOINT_DIR/model.pth")
     # Save Metrics 
-    os.makedirs(METRICS_DIR, exist_ok=True)
     with open(METRICS_PATH, "w") as f:
         json.dump(metrics, f, indent=2)
     print(f"Training metrics saved to: {METRICS_PATH}")

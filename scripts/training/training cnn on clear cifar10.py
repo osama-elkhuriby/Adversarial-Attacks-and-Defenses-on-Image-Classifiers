@@ -24,31 +24,17 @@ TRAIN_SIZE = 45000
 VAL_SIZE = 5000
 
 # --- Data Preparation ---
-train_transform = transforms.Compose([
-    transforms.RandomHorizontalFlip(),
-    transforms.RandomCrop(32, padding=4),
-    transforms.ToTensor(),
-    transforms.Normalize(
-    (0.4914, 0.4822, 0.4465),
-    (0.2470, 0.2435, 0.2616)
-)
-])
+transform = transforms.ToTensor()
 
 
-eval_transform = transforms.Compose([
-    transforms.ToTensor(),
-    transforms.Normalize(
-        (0.4914, 0.4822, 0.4465),
-        (0.2470, 0.2435, 0.2616)
-    )
-])
+
 
 # --- Load Datasets ---
 full_train_dataset = datasets.CIFAR10(
     root="D:/datasets",
     train=True,
     download=True,
-    transform=train_transform
+    transform=transform
 )
 
 
@@ -56,7 +42,7 @@ test_dataset = datasets.CIFAR10(
     root="D:/datasets",
     train=False,
     download=True,
-    transform=eval_transform
+    transform=transform
 )
 # --- Create DataLoaders ---
 train_dataset, val_dataset = random_split(
@@ -110,13 +96,13 @@ for epoch in range(EPOCHS):
 
      # --- Save Trained Model ---
     os.makedirs("./CHECKPOINT_DIR", exist_ok=True)
-    torch.save(model.state_dict(), "./CHECKPOINT_DIR/model.pth")
-    print(f"\nModel checkpoint saved to: ./CHECKPOINT_DIR/model.pth")
+    torch.save(model.state_dict(), "./CHECKPOINT_DIR/model_cifar_clean.pth")
+    print(f"\nModel checkpoint saved to: ./CHECKPOINT_DIR/model_cifar_clean.pth")
 
     # --- Save Training Metrics ---
     os.makedirs("./METRICS_DIR", exist_ok=True)
-    with open("./METRICS_DIR/metrics.json", "w") as f:
+    with open("./METRICS_DIR/metrics_cifar_clean.json", "w") as f:
         json.dump(metric, f, indent=2)
-    print(f"Training metrics saved to: ./METRICS_DIR/metrics.json")
+    print(f"Training metrics saved to: ./METRICS_DIR/metrics_cifar_clean.json")
 
 

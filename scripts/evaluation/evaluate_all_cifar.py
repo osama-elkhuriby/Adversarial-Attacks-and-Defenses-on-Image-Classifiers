@@ -43,15 +43,16 @@ torch.backends.cudnn.benchmark = False
 #  Configuration
 # ──────────────────────────────────────────────────────────────
 BATCH_SIZE = 64
-DATA_DIR = "../../data"
-RESULTS_DIR = "../../results"
+DATA_DIR = "data"
+RESULTS_DIR = "METRICS_DIR"
 RESULTS_PATH = os.path.join(RESULTS_DIR, "cifar10_full_evaluation.json")
 
 # Model checkpoints
 MODELS = {
-    "Baseline": "../../results/checkpoints/cifar10_cnn.pth",
-    "FGSM-AT":  "../../results/checkpoints/cifar10_cnn_fgsm_at.pth",
-    "PGD-AT":   "../../results/checkpoints/cifar10_cnn_pgd_at.pth",
+    "Baseline": "CHECKPOINT_DIR/model_cifar_clean.pth",
+    "FGSM-AT":  "CHECKPOINT_DIR/cifar10_cnn_fgsm_at.pth",
+    "PGD-AT":   "CHECKPOINT_DIR/cifar10_cnn_pgd_at.pth",
+    "Mixed-AT": "CHECKPOINT_DIR/cifar10_mixed_at.pth"
 }
 
 # Standard CIFAR-10 ℓ∞ epsilon values
@@ -80,6 +81,7 @@ def evaluate_clean(
             preds = model(images).argmax(dim=1)
             total += labels.size(0)
             correct += (preds == labels).sum().item()
+            
     return 100.0 * correct / total
 
 
@@ -126,7 +128,7 @@ def main() -> None:
 
         model = CifarCNN().to(device)
         model.load_state_dict(
-            torch.load(checkpoint_path, map_location=device, weights_only=True)
+            torch.load(checkpoint_path, map_location=device, weights_only=False)
         )
         model.eval()
         print(f"  ✓ Model loaded.\n")
