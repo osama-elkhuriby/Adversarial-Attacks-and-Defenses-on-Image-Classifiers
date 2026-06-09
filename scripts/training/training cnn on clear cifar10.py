@@ -23,7 +23,7 @@ BATCH_SIZE = 64
 TRAIN_SIZE = 45000
 VAL_SIZE = 5000
 
-# --- Data Preparation ---
+# Data Preparation 
 train_transform = transforms.Compose([
     transforms.RandomHorizontalFlip(),
     transforms.RandomCrop(32, padding=4),
@@ -43,7 +43,7 @@ eval_transform = transforms.Compose([
     )
 ])
 
-# --- Load Datasets ---
+# Load Datasets 
 full_train_dataset = datasets.CIFAR10(
     root="D:/datasets",
     train=True,
@@ -58,7 +58,7 @@ test_dataset = datasets.CIFAR10(
     download=True,
     transform=eval_transform
 )
-# --- Create DataLoaders ---
+# Create DataLoaders 
 train_dataset, val_dataset = random_split(
 full_train_dataset, [TRAIN_SIZE, VAL_SIZE],
 generator=torch.Generator().manual_seed(42)
@@ -71,7 +71,7 @@ model = CifarCNN().to(training_device)
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.Adam(model.parameters(), lr=L_R)
 
-# --- Training Loop ---
+# Training Loop 
 metric = {
         "dataset": "CIFAR-10",
         "epochs": [],
@@ -108,12 +108,12 @@ for epoch in range(EPOCHS):
         })
 
 
-     # --- Save Trained Model ---
+     # Save Trained Model
     os.makedirs("./CHECKPOINT_DIR", exist_ok=True)
     torch.save(model.state_dict(), "./CHECKPOINT_DIR/model.pth")
     print(f"\nModel checkpoint saved to: ./CHECKPOINT_DIR/model.pth")
 
-    # --- Save Training Metrics ---
+    # Save Training Metrics 
     os.makedirs("./METRICS_DIR", exist_ok=True)
     with open("./METRICS_DIR/metrics.json", "w") as f:
         json.dump(metric, f, indent=2)

@@ -18,7 +18,7 @@ class CifarCNN(nn.Module):
     def __init__(self) -> None:
         super(CifarCNN, self).__init__()
 
-        # --- Convolutional Feature Extractor ---
+        # Convolutional Feature Extractor 
         # Block 1: 3 input channels (RGB)
         # image size is 3*32*32 
         # padding=1 to save image size (32×32 → 32×32) after convolution.
@@ -47,7 +47,7 @@ class CifarCNN(nn.Module):
         self.dropout = nn.Dropout(0.25)
 
 
-        # --- Fully-Connected Classifier ---
+        # Fully-Connected Classifier
         # After two pooling stages: 32→16→8, feature map is 128×8×8 = 8192
         self.fc1 = nn.Linear(in_features=128 * 8 * 8, out_features=256)
         self.fc2 = nn.Linear(in_features=256, out_features=10)

@@ -1,12 +1,9 @@
 """
 CIFAR-10 Adversarial Training Script
-=======================================
 Trains a CifarCNN on CIFAR-10 using adversarial training (AT).
 Two variants are supported:
-
     1. FGSM-AT  — adversarial examples generated via single-step FGSM
     2. PGD-AT   — adversarial examples generated via multi-step PGD (7 steps)
-
 Uses standard CIFAR-10 ℓ∞ perturbation budget:
     ε = 8/255 ≈ 0.031  (Madry et al., 2018)
     α = 2/255          (PGD step size)
