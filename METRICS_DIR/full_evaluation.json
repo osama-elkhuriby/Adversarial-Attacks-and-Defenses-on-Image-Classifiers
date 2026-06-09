@@ -1,0 +1,125 @@
+{
+  "Baseline": {
+    "clean_accuracy": 99.13,
+    "fgsm_results": [
+      {
+        "epsilon": 0.05,
+        "accuracy": 95.68
+      },
+      {
+        "epsilon": 0.1,
+        "accuracy": 86.13
+      },
+      {
+        "epsilon": 0.2,
+        "accuracy": 42.86
+      },
+      {
+        "epsilon": 0.3,
+        "accuracy": 8.9
+      }
+    ],
+    "pgd_results": [
+      {
+        "epsilon": 0.1,
+        "alpha": 0.01,
+        "iters": 10,
+        "accuracy": 82.33
+      },
+      {
+        "epsilon": 0.2,
+        "alpha": 0.01,
+        "iters": 20,
+        "accuracy": 5.25
+      },
+      {
+        "epsilon": 0.3,
+        "alpha": 0.01,
+        "iters": 40,
+        "accuracy": 0.0
+      }
+    ]
+  },
+  "FGSM-AT": {
+    "clean_accuracy": 99.12,
+    "fgsm_results": [
+      {
+        "epsilon": 0.05,
+        "accuracy": 97.43
+      },
+      {
+        "epsilon": 0.1,
+        "accuracy": 93.6
+      },
+      {
+        "epsilon": 0.2,
+        "accuracy": 79.42
+      },
+      {
+        "epsilon": 0.3,
+        "accuracy": 50.66
+      }
+    ],
+    "pgd_results": [
+      {
+        "epsilon": 0.1,
+        "alpha": 0.01,
+        "iters": 10,
+        "accuracy": 93.4
+      },
+      {
+        "epsilon": 0.2,
+        "alpha": 0.01,
+        "iters": 20,
+        "accuracy": 49.94
+      },
+      {
+        "epsilon": 0.3,
+        "alpha": 0.01,
+        "iters": 40,
+        "accuracy": 0.39
+      }
+    ]
+  },
+  "PGD-AT": {
+    "clean_accuracy": 99.21,
+    "fgsm_results": [
+      {
+        "epsilon": 0.05,
+        "accuracy": 97.61
+      },
+      {
+        "epsilon": 0.1,
+        "accuracy": 94.03
+      },
+      {
+        "epsilon": 0.2,
+        "accuracy": 82.92
+      },
+      {
+        "epsilon": 0.3,
+        "accuracy": 61.95
+      }
+    ],
+    "pgd_results": [
+      {
+        "epsilon": 0.1,
+        "alpha": 0.01,
+        "iters": 10,
+        "accuracy": 93.44
+      },
+      {
+        "epsilon": 0.2,
+        "alpha": 0.01,
+        "iters": 20,
+        "accuracy": 45.17
+      },
+      {
+        "epsilon": 0.3,
+        "alpha": 0.01,
+        "iters": 40,
+        "accuracy": 0.08
+      }
+    ]
+  }
+}

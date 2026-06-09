@@ -22,10 +22,10 @@ SEED=42
 BATCH_SIZE = 64          # Mini-batch size for training and evaluation
 LEARNING_RATE = 1e-3     # Adam learning rate
 EPOCHS = 5               # Number of full passes over the training set
-DATA_DIR = "../../data"      # Root directory for MNIST data
+DATA_DIR = "data"      # Root directory for MNIST data
 CHECKPOINT_DIR = "../../results/checkpoints"
 CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "mnist_cnn.pth")
-METRICS_DIR = "../../results"
+METRICS_DIR = "METRICS_DIR"
 METRICS_PATH = os.path.join(METRICS_DIR, "training_metrics.json")
 
 
@@ -38,11 +38,10 @@ def evaluate(model: nn.Module, data_loader: DataLoader, device: torch.device,lab
     Evaluate model accuracy on clean (unperturbed) data.
 
     Args:
-        model:       Trained model to evaluate.
-        data_loader: DataLoader providing the evaluation set.
-        device:      Device on which to run inference.
-        label:       Descriptive label printed alongside the result.
-
+        model: Trained model to evaluate
+        data_loader: DataLoader providing the evaluation set
+        device: Device on which to run inference
+        label: Descriptive label printed alongside the result
     Returns:
         Accuracy as a percentage.
     """
@@ -66,8 +65,7 @@ def evaluate(model: nn.Module, data_loader: DataLoader, device: torch.device,lab
 
 
 def train():
-    """
-    Full training pipeline"""
+    """Full training pipeline"""
     # Device Selection 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
@@ -76,8 +74,8 @@ def train():
     # MNIST images are 28×28 grayscale; ToTensor() scales pixels to [0, 1]
     transform = transforms.ToTensor()
 
-    full_train_dataset = datasets.MNIST(root=DATA_DIR, train=True,download=True, transform=transform)
-    test_dataset = datasets.MNIST(root=DATA_DIR, train=False,download=True, transform=transform)
+    full_train_dataset = datasets.MNIST(root=DATA_DIR, train=True,download=False, transform=transform)
+    test_dataset = datasets.MNIST(root=DATA_DIR, train=False,download=False, transform=transform)
 
     # Split the 60k training set into 50k train / 10k validation
     train_dataset, val_dataset = random_split(
@@ -87,7 +85,7 @@ def train():
     val_loader = DataLoader(val_dataset, batch_size=BATCH_SIZE, shuffle=False)
     test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
-    # --- Model, Loss, Optimizer ---
+    # Model, Loss, Optimizer 
     model = SimpleCNN().to(device)
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
@@ -116,7 +114,7 @@ def train():
             running_loss += loss.item()
 
         avg_loss = running_loss / len(train_loader)
-        print(f"  Epoch [{epoch + 1}/{EPOCHS}]  ─  Avg Loss: {avg_loss:.4f}")
+        print(f"Epoch [{epoch + 1}/{EPOCHS}]  ─  Avg Loss: {avg_loss:.4f}")
 
         # Evaluation on clean validation and test sets (no adversarial perturbations):
         val_acc = evaluate(model, val_loader, device, label="Validation")
@@ -131,14 +129,11 @@ def train():
         })
 
     # Save Trained Model
-    os.makedirs(CHECKPOINT_DIR, exist_ok=True)
-    torch.save(model.state_dict(), CHECKPOINT_PATH)
-    print(f"\n✓ Model checkpoint saved to: {CHECKPOINT_PATH}")
-
-    # Save Metrics ---
-    os.makedirs(METRICS_DIR, exist_ok=True)
+    torch.save(model.state_dict(), "./CHECKPOINT_DIR/model_MNIST.pth")
+    print(f"\nModel checkpoint saved to: ./CHECKPOINT_DIR/model.pth")
+    # Save Metrics 
     with open(METRICS_PATH, "w") as f:
         json.dump(metrics, f, indent=2)
-    print(f"✓ Training metrics saved to: {METRICS_PATH}")
+    print(f"Training metrics saved to: {METRICS_PATH}")
 
 train()

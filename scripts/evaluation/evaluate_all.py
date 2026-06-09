@@ -46,15 +46,15 @@ torch.backends.cudnn.benchmark = False
 #  Configuration
 # ──────────────────────────────────────────────────────────────
 BATCH_SIZE = 64
-DATA_DIR = "../../data"
-RESULTS_DIR = "../../results"
+DATA_DIR = "data"
+RESULTS_DIR = "METRICS_DIR"
 RESULTS_PATH = os.path.join(RESULTS_DIR, "full_evaluation.json")
 
 # Model checkpoints to evaluate
 MODELS = {
-    "Baseline": "results/checkpoints/mnist_cnn.pth",
-    "FGSM-AT":  "results/checkpoints/mnist_cnn_fgsm_at.pth",
-    "PGD-AT":   "results/checkpoints/mnist_cnn_pgd_at.pth",
+    "Baseline": "CHECKPOINT_DIR/model_MNIST.pth",
+    "FGSM-AT":  "CHECKPOINT_DIR/MNIST_cnn_fgsm_at.pth",
+    "PGD-AT":   "CHECKPOINT_DIR/MNIST_cnn_pgd_at.pth",
 }
 
 # FGSM epsilon values to sweep
@@ -147,16 +147,16 @@ def main() -> None:
 
         # Check checkpoint exists
         if not os.path.exists(checkpoint_path):
-            print(f"  ⚠ Checkpoint not found — skipping {model_name}")
+            print(f"Checkpoint not found — skipping {model_name}")
             continue
 
         # Load model
         model = SimpleCNN().to(device)
         model.load_state_dict(
-            torch.load(checkpoint_path, map_location=device, weights_only=True)
+            torch.load(checkpoint_path, map_location=device, weights_only=False)
         )
         model.eval()
-        print(f"  ✓ Model loaded.\n")
+        print(f"Model loaded.\n")
 
         model_results = {}
 
@@ -207,7 +207,7 @@ def main() -> None:
     os.makedirs(RESULTS_DIR, exist_ok=True)
     with open(RESULTS_PATH, "w") as f:
         json.dump(all_results, f, indent=2)
-    print(f"\n✓ Full evaluation results saved to: {RESULTS_PATH}")
+    print(f"\nFull evaluation results saved to: {RESULTS_PATH}")
 
 
 if __name__ == "__main__":

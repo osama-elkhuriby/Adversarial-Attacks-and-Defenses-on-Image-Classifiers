@@ -1,6 +1,6 @@
 """
 this file work on CIFAR-10 dataset, which is a more complex dataset than MNIST.
-The data shape is (batch_size, 3, 32, 32) because CIFAR-10 images are RGB (3 channels) and 32×32 pixels in size.
+The datashape is (batch_size, 3, 32, 32) because CIFAR-10 images are RGB (3 channels) and 32×32 pixels in size.
 
 We used a lightweight CNN for CIFAR-10 classification.
 The input is a 32×32 RGB image.
@@ -47,7 +47,7 @@ class CifarCNN(nn.Module):
         self.dropout = nn.Dropout(0.25)
 
 
-        # Fully Connected Classifier
+        # Fully-Connected Classifier
         # After two pooling stages: 32→16→8, feature map is 128×8×8 = 8192
         self.fc1 = nn.Linear(in_features=128 * 8 * 8, out_features=256)
         self.fc2 = nn.Linear(in_features=256, out_features=10)

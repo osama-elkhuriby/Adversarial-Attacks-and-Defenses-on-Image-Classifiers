@@ -1,22 +1,3 @@
-"""
-CIFAR-10 Adversarial Training Script
-=======================================
-Trains a CifarCNN on CIFAR-10 using adversarial training (AT).
-Two variants are supported:
-
-    1. FGSM-AT  — adversarial examples generated via single-step FGSM
-    2. PGD-AT   — adversarial examples generated via multi-step PGD (7 steps)
-
-Uses standard CIFAR-10 ℓ∞ perturbation budget:
-    ε = 8/255 ≈ 0.031  (Madry et al., 2018)
-    α = 2/255          (PGD step size)
-
-Usage:
-    python train_adversarial_cifar.py --mode fgsm-at
-    python train_adversarial_cifar.py --mode pgd-at
-    python train_adversarial_cifar.py --mode both
-"""
-
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../../src')))
@@ -47,9 +28,9 @@ SEED = 42
 BATCH_SIZE = 64
 LEARNING_RATE = 0.001
 EPOCHS = 20
-DATA_DIR = "../../data"
-CHECKPOINT_DIR = "../../results/checkpoints"
-METRICS_DIR = "../../results"
+DATA_DIR = "data"
+CHECKPOINT_DIR = "CHECKPOINT_DIR"
+METRICS_DIR = "METRICS_DIR"
 
 # CIFAR-10 standard adversarial training parameters (Madry et al.)
 AT_EPSILON = 8 / 255       # ≈ 0.031 — standard CIFAR-10 ℓ∞ budget
@@ -86,9 +67,9 @@ def train_adversarial(mode: str):
     transform = transforms.ToTensor()
 
     full_train_dataset = datasets.CIFAR10(root=DATA_DIR, train=True,
-                                          download=False, transform=transform)
+                                          download=True, transform=transform)
     test_dataset = datasets.CIFAR10(root=DATA_DIR, train=False,
-                                    download=False, transform=transform)
+                                    download=True, transform=transform)
 
     train_dataset, val_dataset = random_split(
         full_train_dataset, [TRAIN_SIZE, VAL_SIZE],
