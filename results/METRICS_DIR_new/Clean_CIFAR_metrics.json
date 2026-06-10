@@ -1,0 +1,131 @@
+{
+  "dataset": "CIFAR-10",
+  "epochs": [
+    {
+      "epoch": 1,
+      "avg_loss": 1.4309,
+      "val_accuracy": 55.84,
+      "test_accuracy": 56.17
+    },
+    {
+      "epoch": 2,
+      "avg_loss": 1.0236,
+      "val_accuracy": 67.64,
+      "test_accuracy": 67.41
+    },
+    {
+      "epoch": 3,
+      "avg_loss": 0.8879,
+      "val_accuracy": 71.4,
+      "test_accuracy": 71.14
+    },
+    {
+      "epoch": 4,
+      "avg_loss": 0.8001,
+      "val_accuracy": 71.3,
+      "test_accuracy": 72.04
+    },
+    {
+      "epoch": 5,
+      "avg_loss": 0.7167,
+      "val_accuracy": 73.9,
+      "test_accuracy": 73.8
+    },
+    {
+      "epoch": 6,
+      "avg_loss": 0.6539,
+      "val_accuracy": 75.06,
+      "test_accuracy": 74.81
+    },
+    {
+      "epoch": 7,
+      "avg_loss": 0.5908,
+      "val_accuracy": 73.76,
+      "test_accuracy": 74.03
+    },
+    {
+      "epoch": 8,
+      "avg_loss": 0.5455,
+      "val_accuracy": 73.3,
+      "test_accuracy": 72.57
+    },
+    {
+      "epoch": 9,
+      "avg_loss": 0.4897,
+      "val_accuracy": 74.26,
+      "test_accuracy": 73.37
+    },
+    {
+      "epoch": 10,
+      "avg_loss": 0.4471,
+      "val_accuracy": 77.34,
+      "test_accuracy": 77.24
+    },
+    {
+      "epoch": 11,
+      "avg_loss": 0.4055,
+      "val_accuracy": 76.8,
+      "test_accuracy": 75.98
+    },
+    {
+      "epoch": 12,
+      "avg_loss": 0.3694,
+      "val_accuracy": 76.78,
+      "test_accuracy": 76.58
+    },
+    {
+      "epoch": 13,
+      "avg_loss": 0.335,
+      "val_accuracy": 77.72,
+      "test_accuracy": 77.33
+    },
+    {
+      "epoch": 14,
+      "avg_loss": 0.3021,
+      "val_accuracy": 79.26,
+      "test_accuracy": 78.69
+    },
+    {
+      "epoch": 15,
+      "avg_loss": 0.2768,
+      "val_accuracy": 78.12,
+      "test_accuracy": 77.88
+    },
+    {
+      "epoch": 16,
+      "avg_loss": 0.2526,
+      "val_accuracy": 78.62,
+      "test_accuracy": 78.42
+    },
+    {
+      "epoch": 17,
+      "avg_loss": 0.2436,
+      "val_accuracy": 77.88,
+      "test_accuracy": 77.32
+    },
+    {
+      "epoch": 18,
+      "avg_loss": 0.2231,
+      "val_accuracy": 77.7,
+      "test_accuracy": 77.28
+    },
+    {
+      "epoch": 19,
+      "avg_loss": 0.2058,
+      "val_accuracy": 79.04,
+      "test_accuracy": 77.71
+    },
+    {
+      "epoch": 20,
+      "avg_loss": 0.1923,
+      "val_accuracy": 78.9,
+      "test_accuracy": 78.22
+    }
+  ],
+  "hyperparameters": {
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "optimizer": "Adam",
+    "epochs": 20
+  }
+}

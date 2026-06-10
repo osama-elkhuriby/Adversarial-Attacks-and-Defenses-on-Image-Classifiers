@@ -23,15 +23,24 @@ BATCH_SIZE = 64
 TRAIN_SIZE = 45000
 VAL_SIZE = 5000
 
-# --- Data Preparation ---
-transform = transforms.ToTensor()
 
+
+DATA_DIR = "data"      # Root directory for MNIST data
+CHECKPOINT_DIR = "results/CHECKPOINT_new"
+CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "Clean_CIFAR_cnn.pth")
+METRICS_DIR = "results/METRICS_DIR_new"
+METRICS_PATH = os.path.join(METRICS_DIR, "Clean_CIFAR_metrics.json")
+
+
+# --- Data Preparation ---
+
+transform = transforms.ToTensor()
 
 
 
 # Load Datasets 
 full_train_dataset = datasets.CIFAR10(
-    root="D:/datasets",
+    root=DATA_DIR,
     train=True,
     download=True,
     transform=transform
@@ -39,7 +48,7 @@ full_train_dataset = datasets.CIFAR10(
 
 
 test_dataset = datasets.CIFAR10(
-    root="D:/datasets",
+    root=DATA_DIR,
     train=False,
     download=True,
     transform=transform
@@ -95,14 +104,14 @@ for epoch in range(EPOCHS):
 
 
      # Save Trained Model
-    os.makedirs("./CHECKPOINT_DIR", exist_ok=True)
-    torch.save(model.state_dict(), "./CHECKPOINT_DIR/model_cifar_clean.pth")
-    print(f"\nModel checkpoint saved to: ./CHECKPOINT_DIR/model_cifar_clean.pth")
+    os.makedirs(CHECKPOINT_DIR, exist_ok=True)
+    torch.save(model.state_dict(), CHECKPOINT_PATH)
+    print(f"\nModel checkpoint saved to: {CHECKPOINT_PATH}")
 
     # Save Training Metrics 
-    os.makedirs("./METRICS_DIR", exist_ok=True)
-    with open("./METRICS_DIR/metrics_cifar_clean.json", "w") as f:
+    os.makedirs(METRICS_DIR, exist_ok=True)
+    with open(METRICS_PATH, "w") as f:
         json.dump(metric, f, indent=2)
-    print(f"Training metrics saved to: ./METRICS_DIR/metrics_cifar_clean.json")
+    print(f"Training metrics saved to: {METRICS_PATH}")
 
 

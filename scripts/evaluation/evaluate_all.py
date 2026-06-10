@@ -6,9 +6,6 @@ both FGSM and PGD adversarial attacks at multiple epsilon levels.
 
 Produces a unified JSON file containing the complete evaluation matrix:
     3 models × (1 clean + 4 FGSM epsilons + 3 PGD settings) = 24 data points
-
-Usage:
-    python evaluate_all.py
 """
 
 import sys
@@ -31,9 +28,7 @@ from models.cnn import SimpleCNN
 from attacks.fgsm import fgsm_attack
 from attacks.pgd import pgd_attack
 
-# ──────────────────────────────────────────────────────────────
 #  Reproducibility
-# ──────────────────────────────────────────────────────────────
 SEED = 42
 random.seed(SEED)
 np.random.seed(SEED)
@@ -42,20 +37,18 @@ torch.cuda.manual_seed_all(SEED)
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
-# ──────────────────────────────────────────────────────────────
 #  Configuration
-# ──────────────────────────────────────────────────────────────
 BATCH_SIZE = 64
 DATA_DIR = "data"
-RESULTS_DIR = "METRICS_DIR"
-RESULTS_PATH = os.path.join(RESULTS_DIR, "full_evaluation.json")
+RESULTS_DIR = "results/METRICS_DIR_new"
+RESULTS_PATH = os.path.join(RESULTS_DIR, "MNIST_full_evaluation.json")
 
-# Model checkpoints to evaluate
+# Model checkpoints
 MODELS = {
-    "Baseline": "CHECKPOINT_DIR/model_MNIST.pth",
-    "FGSM-AT":  "CHECKPOINT_DIR/MNIST_cnn_fgsm_at.pth",
-    "PGD-AT":   "CHECKPOINT_DIR/MNIST_cnn_pgd_at.pth",
-}
+    "Baseline": "results/CHECKPOINT_new/Clean_mnist_cnn.pth",
+    "FGSM-AT":  "results/CHECKPOINT_new/MNIST_cnn_fgsm_at.pth",
+    "PGD-AT":   "results/CHECKPOINT_new/MNIST_cnn_pgd_at.pth",}
+
 
 # FGSM epsilon values to sweep
 FGSM_EPSILONS = [0.05, 0.1, 0.2, 0.3]
@@ -72,8 +65,8 @@ def evaluate_clean(
     model: nn.Module,
     test_loader: DataLoader,
     device: torch.device,
-) -> float:
-    """Measure model accuracy on unperturbed test data."""
+):
+#Measure model accuracy on unperturbed test data
     model.eval()
     correct = 0
     total = 0
@@ -95,7 +88,7 @@ def evaluate_under_attack(
     device: torch.device,
     attack_fn,
     attack_kwargs: dict,
-) -> float:
+):
     """
     Measure model accuracy under an adversarial attack.
 
@@ -107,7 +100,7 @@ def evaluate_under_attack(
         attack_kwargs: Keyword arguments passed to the attack function
                        (e.g. epsilon, alpha, iters).
     Returns:
-        Adversarial accuracy as a percentage (0–100).
+        Adversarial accuracy as a percentage 
     """
     model.eval()
     correct = 0
@@ -125,18 +118,17 @@ def evaluate_under_attack(
     return 100.0 * correct / total
 
 
-def main() -> None:
-    """Evaluate all models under all attacks and save results."""
+def main():
+#Evaluate all models under all attacks and save results.
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}\n")
 
-    # --- Load Test Data ---
+    # Load Test Data
     transform = transforms.ToTensor()
-    test_dataset = datasets.MNIST(root=DATA_DIR, train=False,
-                                  download=True, transform=transform)
+    test_dataset = datasets.MNIST(root=DATA_DIR, train=False,download=True, transform=transform)
     test_loader = DataLoader(test_dataset, batch_size=BATCH_SIZE, shuffle=False)
 
-    # --- Evaluate Each Model ---
+    # Evaluate Each Model
     all_results = {}
 
     for model_name, checkpoint_path in MODELS.items():
@@ -160,13 +152,13 @@ def main() -> None:
 
         model_results = {}
 
-        # --- Clean Accuracy ---
+        # Clean Accuracy
         clean_acc = evaluate_clean(model, test_loader, device)
         model_results["clean_accuracy"] = round(clean_acc, 2)
         print(f"  {'Clean Accuracy':<40} {clean_acc:>6.2f}%")
         print(f"  {'-'*50}")
 
-        # --- FGSM Attack ---
+        #FGSM Attack
         model_results["fgsm_results"] = []
         for eps in FGSM_EPSILONS:
             acc = evaluate_under_attack(
@@ -181,7 +173,7 @@ def main() -> None:
 
         print(f"  {'-'*50}")
 
-        # --- PGD Attack ---
+        #PGD Attack
         model_results["pgd_results"] = []
         for setting in PGD_SETTINGS:
             acc = evaluate_under_attack(
@@ -203,12 +195,12 @@ def main() -> None:
 
         all_results[model_name] = model_results
 
-    # --- Save Results ---
+    #Save Results
     os.makedirs(RESULTS_DIR, exist_ok=True)
     with open(RESULTS_PATH, "w") as f:
         json.dump(all_results, f, indent=2)
     print(f"\nFull evaluation results saved to: {RESULTS_PATH}")
 
 
-if __name__ == "__main__":
-    main()
+
+main()

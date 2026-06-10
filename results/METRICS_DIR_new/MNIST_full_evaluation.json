@@ -1,22 +1,22 @@
 {
   "Baseline": {
-    "clean_accuracy": 99.13,
+    "clean_accuracy": 98.68,
     "fgsm_results": [
       {
         "epsilon": 0.05,
-        "accuracy": 95.68
+        "accuracy": 94.52
       },
       {
         "epsilon": 0.1,
-        "accuracy": 86.13
+        "accuracy": 81.79
       },
       {
         "epsilon": 0.2,
-        "accuracy": 42.86
+        "accuracy": 28.91
       },
       {
         "epsilon": 0.3,
-        "accuracy": 8.9
+        "accuracy": 7.33
       }
     ],
     "pgd_results": [
@@ -24,13 +24,13 @@
         "epsilon": 0.1,
         "alpha": 0.01,
         "iters": 10,
-        "accuracy": 82.33
+        "accuracy": 77.46
       },
       {
         "epsilon": 0.2,
         "alpha": 0.01,
         "iters": 20,
-        "accuracy": 5.25
+        "accuracy": 2.74
       },
       {
         "epsilon": 0.3,
@@ -41,7 +41,48 @@
     ]
   },
   "FGSM-AT": {
-    "clean_accuracy": 99.12,
+    "clean_accuracy": 99.27,
+    "fgsm_results": [
+      {
+        "epsilon": 0.05,
+        "accuracy": 97.69
+      },
+      {
+        "epsilon": 0.1,
+        "accuracy": 93.91
+      },
+      {
+        "epsilon": 0.2,
+        "accuracy": 79.84
+      },
+      {
+        "epsilon": 0.3,
+        "accuracy": 54.18
+      }
+    ],
+    "pgd_results": [
+      {
+        "epsilon": 0.1,
+        "alpha": 0.01,
+        "iters": 10,
+        "accuracy": 92.86
+      },
+      {
+        "epsilon": 0.2,
+        "alpha": 0.01,
+        "iters": 20,
+        "accuracy": 39.09
+      },
+      {
+        "epsilon": 0.3,
+        "alpha": 0.01,
+        "iters": 40,
+        "accuracy": 0.54
+      }
+    ]
+  },
+  "PGD-AT": {
+    "clean_accuracy": 99.15,
     "fgsm_results": [
       {
         "epsilon": 0.05,
@@ -49,15 +90,15 @@
       },
       {
         "epsilon": 0.1,
-        "accuracy": 93.6
+        "accuracy": 94.09
       },
       {
         "epsilon": 0.2,
-        "accuracy": 79.42
+        "accuracy": 79.22
       },
       {
         "epsilon": 0.3,
-        "accuracy": 50.66
+        "accuracy": 56.19
       }
     ],
     "pgd_results": [
@@ -65,60 +106,19 @@
         "epsilon": 0.1,
         "alpha": 0.01,
         "iters": 10,
-        "accuracy": 93.4
+        "accuracy": 93.47
       },
       {
         "epsilon": 0.2,
         "alpha": 0.01,
         "iters": 20,
-        "accuracy": 49.94
+        "accuracy": 45.73
       },
       {
         "epsilon": 0.3,
         "alpha": 0.01,
         "iters": 40,
-        "accuracy": 0.39
-      }
-    ]
-  },
-  "PGD-AT": {
-    "clean_accuracy": 99.21,
-    "fgsm_results": [
-      {
-        "epsilon": 0.05,
-        "accuracy": 97.61
-      },
-      {
-        "epsilon": 0.1,
-        "accuracy": 94.03
-      },
-      {
-        "epsilon": 0.2,
-        "accuracy": 82.92
-      },
-      {
-        "epsilon": 0.3,
-        "accuracy": 61.95
-      }
-    ],
-    "pgd_results": [
-      {
-        "epsilon": 0.1,
-        "alpha": 0.01,
-        "iters": 10,
-        "accuracy": 93.44
-      },
-      {
-        "epsilon": 0.2,
-        "alpha": 0.01,
-        "iters": 20,
-        "accuracy": 45.17
-      },
-      {
-        "epsilon": 0.3,
-        "alpha": 0.01,
-        "iters": 40,
-        "accuracy": 0.08
+        "accuracy": 0.2
       }
     ]
   }

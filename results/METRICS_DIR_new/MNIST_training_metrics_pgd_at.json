@@ -1,0 +1,138 @@
+{
+  "dataset": "MNIST",
+  "mode": "pgd-at",
+  "epochs": [
+    {
+      "epoch": 1,
+      "avg_loss": 0.2655,
+      "val_accuracy": 97.68,
+      "test_accuracy": 98.13
+    },
+    {
+      "epoch": 2,
+      "avg_loss": 0.0887,
+      "val_accuracy": 98.6,
+      "test_accuracy": 98.74
+    },
+    {
+      "epoch": 3,
+      "avg_loss": 0.0656,
+      "val_accuracy": 98.73,
+      "test_accuracy": 98.92
+    },
+    {
+      "epoch": 4,
+      "avg_loss": 0.0515,
+      "val_accuracy": 98.71,
+      "test_accuracy": 98.9
+    },
+    {
+      "epoch": 5,
+      "avg_loss": 0.0429,
+      "val_accuracy": 98.75,
+      "test_accuracy": 98.84
+    },
+    {
+      "epoch": 6,
+      "avg_loss": 0.0358,
+      "val_accuracy": 98.93,
+      "test_accuracy": 99.04
+    },
+    {
+      "epoch": 7,
+      "avg_loss": 0.0318,
+      "val_accuracy": 98.98,
+      "test_accuracy": 99.17
+    },
+    {
+      "epoch": 8,
+      "avg_loss": 0.0238,
+      "val_accuracy": 98.86,
+      "test_accuracy": 98.88
+    },
+    {
+      "epoch": 9,
+      "avg_loss": 0.0214,
+      "val_accuracy": 99.18,
+      "test_accuracy": 99.14
+    },
+    {
+      "epoch": 10,
+      "avg_loss": 0.0192,
+      "val_accuracy": 99.21,
+      "test_accuracy": 99.21
+    },
+    {
+      "epoch": 11,
+      "avg_loss": 0.0165,
+      "val_accuracy": 99.12,
+      "test_accuracy": 99.22
+    },
+    {
+      "epoch": 12,
+      "avg_loss": 0.013,
+      "val_accuracy": 99.09,
+      "test_accuracy": 99.0
+    },
+    {
+      "epoch": 13,
+      "avg_loss": 0.0145,
+      "val_accuracy": 99.15,
+      "test_accuracy": 99.23
+    },
+    {
+      "epoch": 14,
+      "avg_loss": 0.012,
+      "val_accuracy": 99.27,
+      "test_accuracy": 99.28
+    },
+    {
+      "epoch": 15,
+      "avg_loss": 0.0093,
+      "val_accuracy": 99.12,
+      "test_accuracy": 99.14
+    },
+    {
+      "epoch": 16,
+      "avg_loss": 0.0115,
+      "val_accuracy": 99.08,
+      "test_accuracy": 99.27
+    },
+    {
+      "epoch": 17,
+      "avg_loss": 0.0075,
+      "val_accuracy": 99.09,
+      "test_accuracy": 99.17
+    },
+    {
+      "epoch": 18,
+      "avg_loss": 0.0076,
+      "val_accuracy": 99.19,
+      "test_accuracy": 99.1
+    },
+    {
+      "epoch": 19,
+      "avg_loss": 0.0073,
+      "val_accuracy": 99.09,
+      "test_accuracy": 99.09
+    },
+    {
+      "epoch": 20,
+      "avg_loss": 0.0078,
+      "val_accuracy": 99.05,
+      "test_accuracy": 99.15
+    }
+  ],
+  "seed": 42,
+  "hyperparameters": {
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "optimizer": "Adam",
+    "epochs": 20,
+    "at_epsilon": 0.03137254901960784,
+    "at_epsilon_fraction": "8/255",
+    "pgd_alpha": 0.00784313725490196,
+    "pgd_alpha_fraction": "2/255",
+    "pgd_steps": 7
+  }
+}

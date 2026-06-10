@@ -28,12 +28,19 @@ from attacks.pgd import pgd_attack
 # Configuration
 
 SEED = 42
-BATCH_SIZE = 64
-LEARNING_RATE = 1e-3
-DATA_DIR = "../../data"
-CHECKPOINT_DIR = "results/checkpoints/ablation"
-RESULTS_DIR = "../../results"
-RESULTS_PATH = os.path.join(RESULTS_DIR, "cifar10_ablation_results.json")
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+torch.cuda.manual_seed_all(SEED)
+#H.P
+BATCH_SIZE = 64          # Mini-batch size for training and evaluation
+LEARNING_RATE = 0.001     # Adam learning rate
+EPOCHS = 5               # Number of full passes over the training set
+DATA_DIR = "data"      # Root directory for MNIST data
+CHECKPOINT_DIR = "results/CHECKPOINT_new/ablation_cifar"
+RESULTS_DIR = "results/ablation_cifar"
+RESULTS_PATH = os.path.join(RESULTS_DIR, "ablation_CIFAR_results.json")
+
 
 # CIFAR-10 AT parameters
 AT_EPSILON = 8 / 255
@@ -55,7 +62,7 @@ TRAIN_SIZE = 45000
 VAL_SIZE = 5000
 
 
-def set_seed(seed: int = SEED) -> None:
+def set_seed(seed: int = SEED):
     """Set all random seeds for reproducibility."""
     random.seed(seed)
     np.random.seed(seed)
@@ -84,8 +91,7 @@ def get_data_loaders(device: torch.device):
     return train_loader, val_loader, test_loader
 
 
-def evaluate_clean(model: nn.Module, loader: DataLoader,
-                   device: torch.device) -> float:
+def evaluate_clean(model: nn.Module, loader: DataLoader, device: torch.device):
     """Measure clean accuracy."""
     model.eval()
     correct = total = 0
@@ -99,7 +105,7 @@ def evaluate_clean(model: nn.Module, loader: DataLoader,
 
 
 def evaluate_pgd(model: nn.Module, loader: DataLoader,
-                 device: torch.device) -> float:
+                 device: torch.device):
     """Measure robust accuracy under PGD evaluation attack."""
     model.eval()
     correct = total = 0
@@ -123,7 +129,7 @@ def train_pgd_at(
     epochs: int,
     pgd_steps: int,
     tag: str,
-) -> dict:
+):
     """Train a PGD-AT CifarCNN with specified epochs and PGD steps."""
     set_seed(SEED)
 
@@ -131,7 +137,7 @@ def train_pgd_at(
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
 
-    print(f"\n  Training: {tag}  (epochs={epochs}, pgd_steps={pgd_steps})")
+    print(f"\nTraining: {tag}  (epochs={epochs}, pgd_steps={pgd_steps})")
 
     for epoch in range(epochs):
         model.train()
@@ -168,7 +174,7 @@ def train_pgd_at(
     clean_acc = evaluate_clean(model, test_loader, device)
     robust_acc = evaluate_pgd(model, test_loader, device)
 
-    print(f"    ✓ Clean: {clean_acc:.2f}%  |  Robust (PGD ε=8/255): {robust_acc:.2f}%")
+    print(f"Clean: {clean_acc:.2f}%  |  Robust (PGD ε=8/255): {robust_acc:.2f}%")
 
     return {
         "tag": tag,
@@ -179,7 +185,7 @@ def train_pgd_at(
     }
 
 
-def main() -> None:
+def main():
     """Run all CIFAR-10 ablation experiments."""
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
@@ -222,8 +228,6 @@ def main() -> None:
     os.makedirs(RESULTS_DIR, exist_ok=True)
     with open(RESULTS_PATH, "w") as f:
         json.dump(results, f, indent=2)
-    print(f"\n✓ CIFAR-10 ablation results saved to: {RESULTS_PATH}")
+    print(f"\nCIFAR-10 ablation results saved to: {RESULTS_PATH}")
 
-
-if __name__ == "__main__":
-    main()
+main()

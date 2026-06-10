@@ -23,7 +23,7 @@ def evaluate(
         label:       Descriptive label printed alongside the result.
 
     Returns:
-        Accuracy as a percentage (0–100).
+        Accuracy as a percentage.
     """
     model.eval()
     correct = 0

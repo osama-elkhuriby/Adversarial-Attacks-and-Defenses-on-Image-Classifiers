@@ -1,0 +1,55 @@
+{
+  "ablation_pgd_steps": [
+    {
+      "tag": "pgd_at_steps_3",
+      "epochs": 10,
+      "pgd_steps": 3,
+      "clean_accuracy": 99.13,
+      "robust_accuracy": 12.95
+    },
+    {
+      "tag": "pgd_at_steps_5",
+      "epochs": 10,
+      "pgd_steps": 5,
+      "clean_accuracy": 99.12,
+      "robust_accuracy": 33.02
+    },
+    {
+      "tag": "pgd_at_steps_7",
+      "epochs": 10,
+      "pgd_steps": 7,
+      "clean_accuracy": 99.12,
+      "robust_accuracy": 48.23
+    },
+    {
+      "tag": "pgd_at_steps_10",
+      "epochs": 10,
+      "pgd_steps": 10,
+      "clean_accuracy": 98.9,
+      "robust_accuracy": 67.96
+    }
+  ],
+  "ablation_epochs": [
+    {
+      "tag": "pgd_at_epochs_5",
+      "epochs": 5,
+      "pgd_steps": 7,
+      "clean_accuracy": 98.82,
+      "robust_accuracy": 40.27
+    },
+    {
+      "tag": "pgd_at_epochs_10",
+      "epochs": 10,
+      "pgd_steps": 7,
+      "clean_accuracy": 99.12,
+      "robust_accuracy": 48.23
+    },
+    {
+      "tag": "pgd_at_epochs_15",
+      "epochs": 15,
+      "pgd_steps": 7,
+      "clean_accuracy": 99.02,
+      "robust_accuracy": 50.08
+    }
+  ]
+}

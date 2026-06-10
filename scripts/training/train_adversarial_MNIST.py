@@ -22,16 +22,19 @@ from attacks.pgd import pgd_attack
 from Evaluationfunction import evaluate 
 
 SEED = 42
-
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+torch.cuda.manual_seed_all(SEED)
 
 
 #H.P
 BATCH_SIZE = 64
 LEARNING_RATE = 0.001
 EPOCHS = 20
-DATA_DIR = "data"
-CHECKPOINT_DIR = "CHECKPOINT_DIR"
-METRICS_DIR = "METRICS_DIR"
+DATA_DIR = "D:/datasets"
+CHECKPOINT_DIR = "results/CHECKPOINT_new"
+METRICS_DIR = "results/METRICS_DIR_new"
 
 # CIFAR-10 standard adversarial training parameters (Madry et al.)
 AT_EPSILON = 8 / 255       # ≈ 0.031 — standard CIFAR-10 ℓ∞ budget
@@ -63,10 +66,9 @@ def train_adversarial(mode: str):
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
-
     #Data Preparation
-    transform = transforms.ToTensor()
 
+    transform = transforms.ToTensor()
     full_train_dataset = datasets.MNIST(root=DATA_DIR, train=True,
                                           download=True, transform=transform)
     test_dataset = datasets.MNIST(root=DATA_DIR, train=False,

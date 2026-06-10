@@ -12,8 +12,6 @@ Runs two ablation experiments on PGD-based adversarial training:
 Each ablation trains a model variant from scratch, evaluates it under
 clean and PGD (ε=0.3, 40 iters) conditions, and saves the results.
 
-Usage:
-    python ablation_study.py
 """
 
 import sys
@@ -36,15 +34,17 @@ from models.cnn import SimpleCNN
 from attacks.fgsm import fgsm_attack
 from attacks.pgd import pgd_attack
 
-# ──────────────────────────────────────────────────────────────
 #  Configuration
-# ──────────────────────────────────────────────────────────────
 SEED = 42
+random.seed(SEED)
+np.random.seed(SEED)
+torch.manual_seed(SEED)
+torch.cuda.manual_seed_all(SEED)
 BATCH_SIZE = 64
 LEARNING_RATE = 1e-3
-DATA_DIR = "../../data"
-CHECKPOINT_DIR = "results/checkpoints/ablation"
-RESULTS_DIR = "../../results"
+DATA_DIR = "data"
+CHECKPOINT_DIR = "results/CHECKPOINT_new/ablation_MNIST"
+RESULTS_DIR = "results/ablation_MNIST"
 RESULTS_PATH = os.path.join(RESULTS_DIR, "ablation_results.json")
 
 # Adversarial training parameters (defaults)
@@ -80,10 +80,8 @@ def set_seed(seed: int = SEED) -> None:
 def get_data_loaders(device: torch.device):
     """Create train, validation, and test data loaders."""
     transform = transforms.ToTensor()
-    full_train = datasets.MNIST(root=DATA_DIR, train=True,
-                                download=True, transform=transform)
-    test_dataset = datasets.MNIST(root=DATA_DIR, train=False,
-                                  download=True, transform=transform)
+    full_train = datasets.MNIST(root=DATA_DIR, train=True,download=True, transform=transform)
+    test_dataset = datasets.MNIST(root=DATA_DIR, train=False,download=True, transform=transform)
 
     train_ds, val_ds = random_split(
         full_train, [TRAIN_SIZE, VAL_SIZE],
@@ -97,7 +95,7 @@ def get_data_loaders(device: torch.device):
 
 
 def evaluate_clean(model: nn.Module, loader: DataLoader,
-                   device: torch.device) -> float:
+                   device: torch.device):
     """Measure clean accuracy."""
     model.eval()
     correct = total = 0
@@ -111,7 +109,7 @@ def evaluate_clean(model: nn.Module, loader: DataLoader,
 
 
 def evaluate_pgd(model: nn.Module, loader: DataLoader,
-                 device: torch.device) -> float:
+                 device: torch.device):
     """Measure robust accuracy under the standard PGD evaluation attack."""
     model.eval()
     correct = total = 0
@@ -185,7 +183,7 @@ def train_pgd_at(
     clean_acc = evaluate_clean(model, test_loader, device)
     robust_acc = evaluate_pgd(model, test_loader, device)
 
-    print(f"    ✓ Clean: {clean_acc:.2f}%  |  Robust (PGD ε=0.3): {robust_acc:.2f}%")
+    print(f"Clean: {clean_acc:.2f}%  |  Robust (PGD ε=0.3): {robust_acc:.2f}%")
 
     return {
         "tag": tag,
@@ -196,7 +194,7 @@ def train_pgd_at(
     }
 
 
-def main() -> None:
+def main():
     """Run all ablation experiments."""
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
@@ -205,9 +203,8 @@ def main() -> None:
 
     results = {"ablation_pgd_steps": [], "ablation_epochs": []}
 
-    # ──────────────────────────────────────────────────────────
+
     #  Ablation 1: Effect of PGD inner steps during training
-    # ──────────────────────────────────────────────────────────
     print(f"\n{'='*60}")
     print("  Ablation 1: Effect of PGD Inner Steps")
     print(f"  Fixed: epochs={DEFAULT_EPOCHS}, ε={AT_EPSILON}")
@@ -223,9 +220,7 @@ def main() -> None:
         )
         results["ablation_pgd_steps"].append(result)
 
-    # ──────────────────────────────────────────────────────────
     #  Ablation 2: Effect of training epochs
-    # ──────────────────────────────────────────────────────────
     print(f"\n{'='*60}")
     print("  Ablation 2: Effect of Training Epochs")
     print(f"  Fixed: pgd_steps={DEFAULT_PGD_STEPS}, ε={AT_EPSILON}")
@@ -241,14 +236,11 @@ def main() -> None:
         )
         results["ablation_epochs"].append(result)
 
-    # ──────────────────────────────────────────────────────────
     #  Save Results
-    # ──────────────────────────────────────────────────────────
     os.makedirs(RESULTS_DIR, exist_ok=True)
     with open(RESULTS_PATH, "w") as f:
         json.dump(results, f, indent=2)
-    print(f"\n✓ Ablation results saved to: {RESULTS_PATH}")
+    print(f"\nAblation results saved to: {RESULTS_PATH}")
 
 
-if __name__ == "__main__":
-    main()
+main()

@@ -20,25 +20,24 @@ from attacks.pgd import pgd_attack
 from Evaluationfunction import evaluate
 
 
-# ─────────────────────────────────────────────
-# Reproducibility
-# ─────────────────────────────────────────────
+
 SEED = 42
 random.seed(SEED)
 np.random.seed(SEED)
 torch.manual_seed(SEED)
 torch.cuda.manual_seed_all(SEED)
 
-# ─────────────────────────────────────────────
-# Hyperparameters
-# ─────────────────────────────────────────────
+
+# H.P:
 BATCH_SIZE = 64
 LR = 0.001
 EPOCHS = 20
 
-DATA_DIR = "data"
-CHECKPOINT_DIR = "CHECKPOINT_DIR"
-METRICS_DIR = "METRICS_DIR"
+DATA_DIR = "data"      # Root directory for MNIST data
+CHECKPOINT_DIR = "results/CHECKPOINT_new"
+CHECKPOINT_PATH = os.path.join(CHECKPOINT_DIR, "Mixed_CIFAR.pth")
+METRICS_DIR = "results/METRICS_DIR_new"
+METRICS_PATH = os.path.join(METRICS_DIR, "Mixed_CIFAR_metrics.json")
 
 # Adversarial settings
 EPS = 8 / 255
@@ -53,23 +52,22 @@ TRAIN_SIZE = 45000
 VAL_SIZE = 5000
 
 
-# ─────────────────────────────────────────────
-# Mixed Adversarial Training
-# ─────────────────────────────────────────────
-def train_mixed():
-    print("\n==============================")
-    print("  Mixed Adversarial Training")
-    print("==============================")
 
+# Mixed Adversarial Training
+def train_mixed():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print("Device:", device)
 
-    transform =transforms.ToTensor()
+    train_transform = transforms.Compose([
+    transforms.RandomCrop(32, padding=4),
+    transforms.RandomHorizontalFlip(),
+    transforms.ToTensor(),
+])
 
-    full_train = datasets.CIFAR10(root=DATA_DIR, train=True,
-                                  download=True, transform=transform)
-    test_set = datasets.CIFAR10(root=DATA_DIR, train=False,
-                                download=True, transform=transform)
+    test_transform = transforms.ToTensor()
+
+    full_train = datasets.CIFAR10(root=DATA_DIR, train=True, download=True, transform=test_transform)
+    test_set = datasets.CIFAR10(root=DATA_DIR, train=False,download=True, transform=test_transform)
 
     train_set, val_set = random_split(
         full_train, [TRAIN_SIZE, VAL_SIZE],
@@ -94,9 +92,9 @@ def train_mixed():
 
             images, labels = images.to(device), labels.to(device)
 
-            # ─────────────────────────────
+         
             # Split batch into 3 parts
-            # ─────────────────────────────
+           
             bsz = images.size(0)
             n_clean = int(bsz * CLEAN_RATIO)
             n_fgsm = int(bsz * FGSM_RATIO)
@@ -121,11 +119,11 @@ def train_mixed():
 
             model.train()
 
-            # ─────────────────────────────
+            
             # Combine all data
-            # ─────────────────────────────
             final_x = torch.cat([clean_x, adv_fgsm, adv_pgd], dim=0)
             final_y = torch.cat([clean_y, fgsm_y, pgd_y], dim=0)
+            #shuffeling
             perm = torch.randperm(final_x.size(0), device=final_x.device)
             final_x = final_x[perm]
             final_y = final_y[perm]
@@ -144,19 +142,24 @@ def train_mixed():
 
         print(f"Epoch {epoch+1}: loss={avg_loss:.4f}, val={val_acc:.2f}, test={test_acc:.2f}")
 
+        
         metrics["epochs"].append({
             "epoch": epoch + 1,
-            "loss": avg_loss,
-            "val_acc": val_acc,
-            "test_acc": test_acc
+            "avg_loss": avg_loss,
+            "val_accuracy": val_acc,
+            "test_accuracy": test_acc
         })
 
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)
-    torch.save(model.state_dict(), f"{CHECKPOINT_DIR}/cifar10_mixed_at.pth")
 
+    torch.save(model.state_dict(), CHECKPOINT_PATH)
+    print(f"\nModel checkpoint saved to: {CHECKPOINT_PATH}")
+    # Save Metrics 
     os.makedirs(METRICS_DIR, exist_ok=True)
-    with open(f"{METRICS_DIR}/mixed_at_metrics.json", "w") as f:
+
+    with open(METRICS_PATH, "w") as f:
         json.dump(metrics, f, indent=2)
+    print(f"Training metrics saved to: {METRICS_PATH}")
 
 
 if __name__ == "__main__":

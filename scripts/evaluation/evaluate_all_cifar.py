@@ -6,8 +6,6 @@ under both FGSM and PGD adversarial attacks at multiple epsilon levels.
 
 Uses standard CIFAR-10 ℓ∞ epsilon values: {2/255, 4/255, 8/255, 16/255}
 
-Usage:
-    python evaluate_all_cifar.py
 """
 
 import sys
@@ -28,9 +26,7 @@ from models.cifar_cnn import CifarCNN
 from attacks.fgsm import fgsm_attack
 from attacks.pgd import pgd_attack
 
-# ──────────────────────────────────────────────────────────────
 #  Reproducibility
-# ──────────────────────────────────────────────────────────────
 SEED = 42
 random.seed(SEED)
 np.random.seed(SEED)
@@ -39,20 +35,18 @@ torch.cuda.manual_seed_all(SEED)
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 
-# ──────────────────────────────────────────────────────────────
 #  Configuration
-# ──────────────────────────────────────────────────────────────
 BATCH_SIZE = 64
 DATA_DIR = "data"
-RESULTS_DIR = "METRICS_DIR"
+RESULTS_DIR = "results/METRICS_DIR_new"
 RESULTS_PATH = os.path.join(RESULTS_DIR, "cifar10_full_evaluation.json")
 
 # Model checkpoints
 MODELS = {
-    "Baseline": "CHECKPOINT_DIR/model_cifar_clean.pth",
-    "FGSM-AT":  "CHECKPOINT_DIR/cifar10_cnn_fgsm_at.pth",
-    "PGD-AT":   "CHECKPOINT_DIR/cifar10_cnn_pgd_at.pth",
-    "Mixed-AT": "CHECKPOINT_DIR/cifar10_mixed_at.pth"
+    "Baseline": "results/CHECKPOINT_new/Clean_CIFAR_cnn.pth",
+    "FGSM-AT":  "results/CHECKPOINT_new/cifar10_cnn_fgsm_at.pth",
+    "PGD-AT":   "results/CHECKPOINT_new/cifar10_cnn_pgd_at.pth",
+    "Mixed-AT": "results/CHECKPOINT_new/Mixed_CIFAR.pth"
 }
 
 # Standard CIFAR-10 ℓ∞ epsilon values
@@ -71,7 +65,7 @@ def evaluate_clean(
     model: nn.Module,
     test_loader: DataLoader,
     device: torch.device,
-) -> float:
+):
     """Measure model accuracy on unperturbed test data."""
     model.eval()
     correct = total = 0
@@ -104,7 +98,7 @@ def evaluate_under_attack(
     return 100.0 * correct / total
 
 
-def main() -> None:
+def main():
     """Evaluate all CIFAR-10 models under all attacks."""
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}\n")
@@ -123,7 +117,7 @@ def main() -> None:
         print(f"{'='*55}")
 
         if not os.path.exists(checkpoint_path):
-            print(f"  ⚠ Checkpoint not found — skipping {model_name}")
+            print(f"Checkpoint not found — skipping {model_name}")
             continue
 
         model = CifarCNN().to(device)
@@ -131,7 +125,7 @@ def main() -> None:
             torch.load(checkpoint_path, map_location=device, weights_only=False)
         )
         model.eval()
-        print(f"  ✓ Model loaded.\n")
+        print(f"Model loaded.\n")
 
         model_results = {}
 
@@ -185,8 +179,5 @@ def main() -> None:
     os.makedirs(RESULTS_DIR, exist_ok=True)
     with open(RESULTS_PATH, "w") as f:
         json.dump(all_results, f, indent=2)
-    print(f"\n✓ CIFAR-10 full evaluation saved to: {RESULTS_PATH}")
-
-
-if __name__ == "__main__":
-    main()
+    print(f"\nCIFAR-10 full evaluation saved to: {RESULTS_PATH}")
+main()

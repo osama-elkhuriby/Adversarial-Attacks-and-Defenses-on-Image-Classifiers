@@ -30,23 +30,32 @@ import numpy as np
 # ──────────────────────────────────────────────────────────────
 #  Configuration
 # ──────────────────────────────────────────────────────────────
-FIGURE_DIR = "../../reports/figures"
-RESULTS_DIR = "../../results"
+FIGURE_DIR = "results/figures"
+RESULTS_DIR = "results/METRICS_DIR_new"
 DPI = 300
 
 FULL_EVAL_PATH = os.path.join(RESULTS_DIR, "cifar10_full_evaluation.json")
-BASELINE_METRICS_PATH = os.path.join(RESULTS_DIR, "cifar10_training_metrics.json")
+BASELINE_METRICS_PATH = os.path.join(RESULTS_DIR, "Clean_CIFAR_metrics.json")
 FGSM_AT_METRICS_PATH = os.path.join(RESULTS_DIR, "cifar10_training_metrics_fgsm_at.json")
 PGD_AT_METRICS_PATH = os.path.join(RESULTS_DIR, "cifar10_training_metrics_pgd_at.json")
-ABLATION_PATH = os.path.join(RESULTS_DIR, "cifar10_ablation_results.json")
+Mixed_AT_METRICS_PATH = os.path.join(RESULTS_DIR, "Mixed_CIFAR_metrics.json")
+
+ABLATION_PATH = os.path.join("results", "ablation_cifar/ablation_CIFAR_results.json")
 
 # Consistent styling
 COLORS = {
     "Baseline": "#E74C3C",
     "FGSM-AT":  "#3498DB",
     "PGD-AT":   "#2ECC71",
+    "Mixed-AT": "#9B59B6", 
 }
-MARKERS = {"Baseline": "o", "FGSM-AT": "s", "PGD-AT": "D"}
+
+MARKERS = {
+    "Baseline": "o",
+    "FGSM-AT": "s",
+    "PGD-AT": "D",
+    "Mixed-AT": "^",
+}
 
 matplotlib.rcParams.update({
     "font.size": 11,
@@ -69,7 +78,7 @@ def plot_accuracy_vs_epsilon_fgsm(data: dict) -> None:
     """Figure 13: CIFAR-10 accuracy vs epsilon under FGSM."""
     plt.figure(figsize=(8, 5))
 
-    for model_name in ["Baseline", "FGSM-AT", "PGD-AT"]:
+    for model_name in ["Baseline", "FGSM-AT", "PGD-AT", "Mixed-AT"]:
         if model_name not in data:
             continue
         md = data[model_name]
@@ -103,7 +112,7 @@ def plot_accuracy_vs_epsilon_pgd(data: dict) -> None:
     """Figure 14: CIFAR-10 accuracy vs epsilon under PGD."""
     plt.figure(figsize=(8, 5))
 
-    for model_name in ["Baseline", "FGSM-AT", "PGD-AT"]:
+    for model_name in ["Baseline", "FGSM-AT", "PGD-AT","Mixed-AT"]:
         if model_name not in data:
             continue
         md = data[model_name]
@@ -134,7 +143,11 @@ def plot_accuracy_vs_epsilon_pgd(data: dict) -> None:
 
 def plot_tradeoff_bar_chart(data: dict) -> None:
     """Figure 15: CIFAR-10 robustness-accuracy trade-off."""
-    models = [m for m in ["Baseline", "FGSM-AT", "PGD-AT"] if m in data]
+    models = [
+    m for m in
+    ["Baseline", "FGSM-AT", "PGD-AT", "Mixed-AT"]
+    if m in data
+]   
     if not models:
         return
 
@@ -191,11 +204,12 @@ def plot_training_curves() -> None:
         "Baseline": BASELINE_METRICS_PATH,
         "FGSM-AT": FGSM_AT_METRICS_PATH,
         "PGD-AT": PGD_AT_METRICS_PATH,
+        "Mixed-AT": Mixed_AT_METRICS_PATH
     }
 
     for model_name, path in metrics_files.items():
         if not os.path.exists(path):
-            print(f"  ⚠ Missing {path} — skipping {model_name}")
+            print(f" Missing {path} — skipping {model_name}")
             continue
         with open(path, "r") as f:
             metrics = json.load(f)
@@ -314,7 +328,7 @@ def main() -> None:
         plot_accuracy_vs_epsilon_pgd(eval_data)
         plot_tradeoff_bar_chart(eval_data)
     else:
-        print(f"  ⚠ {FULL_EVAL_PATH} not found — skipping Figures 13–15")
+        print(f"   {FULL_EVAL_PATH} not found — skipping Figures 13–15")
 
     # Figure 16
     plot_training_curves()
