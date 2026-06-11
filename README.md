@@ -317,12 +317,6 @@ This project is a course-scale reproducible study, not a full publication-level 
 
 ---
 
-## Use of GenAI Tools
-
-The team implemented the experiments, generated the results, and verified all reported numbers using the project code, saved JSON metrics, and generated figures. OpenAI ChatGPT (GPT-5.5) was used for language polishing, LaTeX organization, presentation clarity, and assistance with minor code modifications and debugging suggestions. All suggested code changes were reviewed, executed, and validated by the team. All technical decisions, experimental results, numerical values, and final analysis remain the responsibility of the authors.
-
----
-
 ## References
 
 - C. Szegedy et al., “Intriguing properties of neural networks,” ICLR, 2014.
