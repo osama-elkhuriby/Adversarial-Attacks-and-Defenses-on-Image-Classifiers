@@ -1,51 +1,35 @@
-# Adversarial Attacks and Defenses on Image Classifiers
+# Exploring Adversarial Robustness of Lightweight Image Classifiers  
+## From MNIST Baselines to CIFAR-10 Adversarial Training
 
-> Exploring the **accuracy–robustness trade-off** of lightweight CNN classifiers on **CIFAR-10** and **MNIST** through fundamental adversarial attacks (FGSM, PGD) and empirical adversarial training.
-
----
-
-## Table of Contents
-
-- [Overview](#overview)
-- [Key Concepts](#key-concepts)
-- [Project Structure](#project-structure)
-- [Requirements](#requirements)
-- [Setup & Installation](#setup--installation)
-  - [Linux / macOS](#linux--macos)
-  - [Windows](#windows)
-- [Running the Project](#running-the-project)
-  - [Launch JupyterLab](#launch-jupyterlab)
-  - [Workflow Order](#workflow-order)
-- [Attacks Implemented](#attacks-implemented)
-- [Defense Strategy](#defense-strategy)
-- [Results & Outputs](#results--outputs)
-- [Datasets](#datasets)
-- [License](#license)
+This repository contains the implementation, experiments, and reproducibility materials for a deep learning project on adversarial robustness in image classification. The project studies how lightweight convolutional neural networks behave under standard white-box adversarial attacks and how adversarial training changes the clean-accuracy versus robust-accuracy trade-off.
 
 ---
 
-## Overview
+## Abstract
 
-Deep neural networks are remarkably accurate on clean data — but remarkably fragile against carefully crafted perturbations that are **invisible to the human eye**. This project provides a clean, reproducible framework to:
-
-1. **Train** lightweight CNN classifiers on CIFAR-10 and MNIST from scratch.
-2. **Attack** them with the two canonical white-box adversarial attacks: FGSM and PGD.
-3. **Defend** them using empirical adversarial training and benchmark the accuracy–robustness trade-off.
-
-Everything is implemented in **pure PyTorch**, structured as clean, modular Python scripts, and fully reproducible via pinned Conda environments on both Linux and Windows.
+Deep neural networks can achieve strong accuracy on clean image classification benchmarks, but they may fail under small, carefully designed adversarial perturbations. This project first validates an adversarial evaluation pipeline on MNIST using a lightweight CNN and then extends the study to CIFAR-10, a more challenging RGB image dataset. We evaluate a clean CIFAR-10 CNN baseline under Fast Gradient Sign Method (FGSM) and Projected Gradient Descent (PGD), then compare it with three defended variants: FGSM adversarial training (FGSM-AT), PGD adversarial training (PGD-AT), and Mixed Adversarial Training (Mixed-AT). The results show that clean accuracy alone is not sufficient for evaluating model reliability. The clean baseline reaches 78.22% CIFAR-10 clean accuracy but collapses to 2.42% under FGSM and 0.00% under PGD at ε = 8/255. Adversarial training substantially improves robust accuracy, while introducing a clear robustness–accuracy trade-off.
 
 ---
 
-## Key Concepts
+## Research Question
 
-| Term | Description |
-|---|---|
-| **Adversarial Example** | An input image perturbed by a small, imperceptible noise that causes a model to misclassify it |
-| **FGSM** | Fast Gradient Sign Method — single-step L∞ attack; fast to compute, used as a baseline |
-| **PGD** | Projected Gradient Descent — multi-step iterative attack; stronger and considered the standard benchmark attack |
-| **ε (epsilon)** | Maximum allowed perturbation magnitude; controls the attack strength |
-| **Adversarial Training** | Re-training the model on adversarial examples to improve robustness — the most reliable empirical defense |
-| **Accuracy–Robustness Trade-off** | Improving robustness via adversarial training typically comes at a cost to clean accuracy |
+How vulnerable are lightweight CNN image classifiers to FGSM and PGD attacks, and to what extent can adversarial training improve robustness while preserving clean accuracy?
+
+---
+
+## Main Contributions
+
+- Implemented standard FGSM and PGD adversarial attacks in PyTorch.
+- Validated the attack pipeline on MNIST as a preliminary benchmark.
+- Extended the project to CIFAR-10 as the final robustness benchmark.
+- Trained and evaluated four CIFAR-10 variants:
+  - Clean baseline CNN
+  - FGSM-AT
+  - PGD-AT
+  - Mixed-AT
+- Compared clean accuracy, FGSM robust accuracy, and PGD robust accuracy under matched attack settings.
+- Added a small PGD-AT ablation study over training steps and epochs.
+- Provided reproducibility scripts, result tables, generated figures, and a final IEEE-style report.
 
 ---
 
@@ -53,236 +37,304 @@ Everything is implemented in **pure PyTorch**, structured as clean, modular Pyth
 
 ```text
 Adversarial-Attacks-and-Defenses-on-Image-Classifiers/
-├── data/                       # Datasets (MNIST, CIFAR-10)
-├── results/
-│   └── checkpoints/            # Saved model weights
-├── reports/                    # LaTeX reports and generated figures
-│   ├── figures/
-│   └── report.tex              # Final project report
-├── src/                        # Core library code
-│   ├── models/                 # CNN architectures
-│   │   ├── cnn.py              # SimpleCNN (MNIST)
-│   │   └── cifar_cnn.py        # CifarCNN (CIFAR-10)
-│   └── attacks/                # Attack implementations
-│       ├── fgsm.py             # Single-step attack
-│       └── pgd.py              # Multi-step iterative attack
-├── scripts/                    # Execution scripts
-│   ├── training/               # Clean and adversarial training
-│   │   ├── train.py            # Baseline MNIST training
-│   │   ├── train_cifar.py      # Baseline CIFAR-10 training
-│   │   ├── train_adversarial.py
-│   │   └── train_adversarial_cifar.py
-│   ├── evaluation/             # Full eval matrices & ablations
-│   │   ├── evaluate_fgsm.py    # Standalone FGSM eval (MNIST)
-│   │   ├── evaluate_pgd.py     # Standalone PGD eval (MNIST)
-│   │   ├── evaluate_all.py     # Full evaluation matrix (MNIST)
+├── data/                              # Auto-downloaded datasets; not committed
+├── CHECKPOINT_DIR/                    # Saved checkpoints; not committed
+├── results/                           # JSON metrics and evaluation outputs
+├── reports/
+│   ├── figures/                       # Figures used in the report and presentation
+│   └── report.tex                     # Final LaTeX report
+├── src/
+│   ├── attacks/
+│   │   ├── fgsm.py                    # FGSM implementation
+│   │   └── pgd.py                     # PGD implementation
+│   └── models/
+│       ├── cnn.py                     # MNIST CNN
+│       └── cifar_cnn.py               # CIFAR-10 CNN
+├── scripts/
+│   ├── training/
+│   │   ├── train_MNIST_clean.py
+│   │   ├── training cnn on clear cifar10.py
+│   │   ├── train_adversarial_MNIST.py
+│   │   ├── train_adversarial_cifar.py
+│   │   └── mixed_CIFAR.py
+│   ├── evaluation/
+│   │   ├── evaluate_fgsm.py
+│   │   ├── evaluate_pgd.py
 │   │   ├── evaluate_all_cifar.py
 │   │   ├── ablation_study.py
 │   │   └── ablation_study_cifar.py
-│   └── visualization/          # Plotting and image collages
-│       ├── preview_data.py     # Data preview utility
-│       ├── visualize_steps.py  # Attack progression collages
-│       ├── visualize_cifar.py  # CIFAR-10 visualizations
-│       ├── plot_results.py     # Result curves (MNIST)
-│       └── plot_results_cifar.py
-├── dl-project-linux.yml        # Conda environment — Linux / macOS
-├── dl-project-windows.yml      # Conda environment — Windows
-├── .gitignore                  # Git ignore rules
-└── LICENSE                     # MIT License
+│   └── visualization/
+│       ├── plot_results_cifar.py
+│       └── other visualization utilities
+├── dl-project-linux.yml               # Conda environment for Linux/macOS
+├── dl-project-windows.yml             # Conda environment for Windows
+├── .gitignore
+└── README.md
 ```
 
-> **Note:** CIFAR-10 will be downloaded automatically by `torchvision` on first run (if implemented). MNIST is downloaded automatically under `src/data/`.
+---
+
+## Datasets
+
+| Dataset | Image Type | Classes | Standard Split | Project Role |
+|---|---:|---:|---:|---|
+| MNIST | 1 × 28 × 28 grayscale | 10 | 60,000 train / 10,000 test | Preliminary validation |
+| CIFAR-10 | 3 × 32 × 32 RGB | 10 | 50,000 train / 10,000 test | Final benchmark |
+
+For the project protocol, MNIST training data is split into 50,000 training and 10,000 validation samples. CIFAR-10 training data is split into 45,000 training and 5,000 validation samples using seed 42. The CIFAR-10 test set contains 10,000 images and is used for final clean, FGSM, and PGD evaluation.
+
+Datasets are downloaded automatically through Torchvision. Raw datasets and checkpoints should not be committed to GitHub.
 
 ---
 
-## Requirements
+## Model Architectures
 
-| Dependency | Version |
-|---|---|
-| Python | 3.10 |
-| PyTorch | 2.11.0 |
-| TorchVision | 0.26.0 |
-| NumPy | 1.26.4 |
-| Matplotlib | 3.8.4 |
-| Seaborn | 0.13.2 |
-| scikit-learn | 1.5.2 |
-| tqdm | 4.66.5 |
-| Pandas | 2.2.2 |
-| Pillow | 10.4.0 |
+### MNIST CNN
 
-All dependencies (with exact pinned versions) are declared in the Conda environment files.
+The MNIST baseline is a lightweight two-convolution CNN with ReLU activations, max-pooling, and fully connected layers. It is used to validate the basic attack and evaluation pipeline.
 
-**Hardware:** A CUDA-capable GPU is strongly recommended for CIFAR-10 adversarial training. MNIST experiments run comfortably on CPU.
+### CIFAR-10 CNN
+
+The CIFAR-10 model is a lightweight CNN with three convolutional blocks, batch normalization, ReLU activations, max-pooling, dropout, and a final 10-class classifier. The goal is not to reach state-of-the-art CIFAR-10 accuracy, but to provide a controlled and reproducible robustness evaluation.
 
 ---
 
-## Setup & Installation
+## Attacks Implemented
 
-### Prerequisites
+### FGSM
 
-- [Anaconda](https://www.anaconda.com/download) or [Miniconda](https://docs.conda.io/en/latest/miniconda.html) installed
-- Git installed
+FGSM is a one-step white-box attack:
 
-### 1. Clone the Repository
+```text
+x_adv = x + ε · sign(∇_x J(θ, x, y))
+```
+
+It is computationally efficient and useful as a baseline robustness attack.
+
+### PGD
+
+PGD is an iterative projected attack:
+
+```text
+x_{t+1} = Π_{Bε(x)}(x_t + α · sign(∇_x J(θ, x_t, y)))
+```
+
+PGD is stronger than FGSM because it performs multiple projected gradient steps inside the allowed perturbation budget.
+
+---
+
+## Defense Strategies
+
+The final CIFAR-10 experiments compare the clean baseline with three adversarial training variants.
+
+| Defense | Training Attack | Training Setting |
+|---|---|---|
+| FGSM-AT | FGSM | ε = 8/255 |
+| PGD-AT | PGD | ε = 8/255, α = 2/255, 7 steps |
+| Mixed-AT | Clean + FGSM + PGD | Mixed mini-batches with clean, FGSM, and PGD samples |
+
+Adversarial training improves robustness but typically reduces clean accuracy. Mixed-AT is included to study whether combining clean and adversarial examples improves the clean–robust balance.
+
+---
+
+## Experimental Protocol
+
+| Hyperparameter | Baseline | FGSM-AT | PGD-AT | Mixed-AT |
+|---|---:|---:|---:|---:|
+| Optimizer | Adam | Adam | Adam | Adam |
+| Learning rate | 0.001 | 0.001 | 0.001 | 0.001 |
+| Batch size | 64 | 64 | 64 | 64 |
+| Epochs | 20 | 15 | 15 | 20 |
+| AT ε | — | 8/255 | 8/255 | 8/255 |
+| PGD α | — | — | 2/255 | 2/255 |
+| PGD steps | — | — | 7 | 7 |
+| Seed | 42 | 42 | 42 | 42 |
+
+Evaluation uses the same CIFAR-10 test set for all models. Clean accuracy, FGSM robust accuracy, PGD robust accuracy, and training loss are reported.
+
+---
+
+## Main CIFAR-10 Results
+
+At ε = 8/255:
+
+| Model | Clean Accuracy | FGSM 8/255 | PGD 8/255 |
+|---|---:|---:|---:|
+| Baseline | 78.22% | 2.42% | 0.00% |
+| FGSM-AT | 58.66% | 36.87% | 32.62% |
+| PGD-AT | 59.53% | 35.89% | 32.60% |
+| Mixed-AT | 65.20% | 35.27% | 29.35% |
+
+The clean baseline performs best on unperturbed images, but collapses under adversarial evaluation. FGSM-AT and PGD-AT provide the strongest PGD robustness, while Mixed-AT achieves the best clean accuracy among defended models.
+
+---
+
+## FGSM Robustness Sweep
+
+| Model | 2/255 | 4/255 | 8/255 | 16/255 |
+|---|---:|---:|---:|---:|
+| Baseline | 19.12% | 7.28% | 2.42% | 1.68% |
+| FGSM-AT | 52.51% | 46.67% | 36.87% | 22.22% |
+| PGD-AT | 52.70% | 46.57% | 35.89% | 20.91% |
+| Mixed-AT | 56.62% | 48.53% | 35.27% | 18.67% |
+
+---
+
+## PGD Robustness Sweep
+
+| Model | 4/255 | 8/255 | 16/255 |
+|---|---:|---:|---:|
+| Baseline | 0.18% | 0.00% | 0.00% |
+| FGSM-AT | 45.58% | 32.62% | 11.75% |
+| PGD-AT | 45.70% | 32.60% | 11.95% |
+| Mixed-AT | 46.59% | 29.35% | 7.05% |
+
+PGD is significantly stronger than FGSM for the clean baseline. At ε = 8/255 and above, the baseline is essentially unusable under PGD evaluation.
+
+---
+
+## PGD-AT Ablation Study
+
+| Setting | Epochs | PGD Steps | Clean / Robust Accuracy |
+|---|---:|---:|---:|
+| Steps = 3 | 15 | 3 | 66.46% / 25.84% |
+| Steps = 7 | 15 | 7 | 57.46% / 32.27% |
+| Epochs = 10 | 10 | 7 | 54.87% / 32.43% |
+| Epochs = 15 | 15 | 7 | 57.46% / 32.27% |
+
+Increasing PGD training steps improves robust accuracy but reduces clean accuracy. In this small ablation, PGD step count has a stronger effect on the clean–robust trade-off than the small change in training duration.
+
+---
+
+## Setup and Installation
+
+### Requirements
+
+- Python 3.10
+- PyTorch
+- TorchVision
+- NumPy
+- Matplotlib
+- Pandas
+- scikit-learn
+- tqdm
+- Pillow
+
+A CUDA-capable GPU is recommended for CIFAR-10 adversarial training. MNIST can run comfortably on CPU.
+
+### Clone Repository
 
 ```bash
 git clone https://github.com/osama-elkhuriby/Adversarial-Attacks-and-Defenses-on-Image-Classifiers.git
 cd Adversarial-Attacks-and-Defenses-on-Image-Classifiers
 ```
 
----
-
 ### Linux / macOS
 
 ```bash
-# Create the conda environment from the pinned spec
 conda env create -f dl-project-linux.yml
-
-# Activate it
 conda activate dl-project
-
-# Verify PyTorch is correctly installed
 python -c "import torch; print(torch.__version__); print('CUDA available:', torch.cuda.is_available())"
 ```
-
----
 
 ### Windows
 
 ```bash
-# Create the conda environment from the pinned spec
 conda env create -f dl-project-windows.yml
-
-# Activate it
 conda activate dl-project
-
-# Verify PyTorch is correctly installed
 python -c "import torch; print(torch.__version__); print('CUDA available:', torch.cuda.is_available())"
 ```
 
-> **Tip (GPU on Windows):** If you have an NVIDIA GPU and CUDA is not detected, visit [pytorch.org](https://pytorch.org/get-started/locally/) to install the appropriate CUDA-enabled PyTorch build for your driver version, then re-run the verification command.
-
 ---
 
-## Running the Project
+## Reproducibility Commands
 
-### Running the Scripts
+Each script should be executed from the folder shown below.
 
-With the environment activated, navigate to the `src/` directory and run the scripts in sequence:
-
-```bash
-cd src/
-```
-
-### Workflow Order
-
-Follow this sequence for a complete end-to-end experiment:
-
-```bash
-# Step 1: Train baseline CNN classifier (MNIST)
-python train.py
-
-# Step 2: Run FGSM attack on the trained model (varies ε)
-python evaluate_fgsm.py
-
-# Step 3: Run PGD attack on the trained model (varies ε and steps)
-python evaluate_pgd.py
-
-# Step 4: Generate visualization figures
-python visualize_steps.py
-```
-
-> **Note:** All scripts use a fixed random seed (42) and export their metrics to JSON files under `src/results/` to ensure full reproducibility.
-
----
-
-## Attacks Implemented
-
-### FGSM — Fast Gradient Sign Method
-
-A single-step, gradient-based L∞ attack (Goodfellow et al., 2014):
-
-```
-x_adv = x + ε · sign(∇_x J(θ, x, y))
-```
-
-- **Strength:** Fast; good baseline for evaluating model sensitivity.
-- **Weakness:** One step only; weaker than iterative attacks.
-- **Key hyperparameter:** `epsilon` (ε) — try values in `[0.01, 0.1, 0.3]` for MNIST and `[1/255, 4/255, 8/255]` for CIFAR-10.
-
-### PGD — Projected Gradient Descent
-
-A multi-step iterative L∞ attack (Madry et al., 2018), the de-facto standard robustness benchmark:
-
-```
-x_(t+1) = Π_{x+S}[ x_t + α · sign(∇_x J(θ, x_t, y)) ]
-```
-
-where `Π` projects back into the ε-ball after each step.
-
-- **Strength:** Much stronger than FGSM; widely considered the gold-standard white-box attack.
-- **Key hyperparameters:** `epsilon` (ε), step size `alpha` (α), number of steps `n_steps`.
-
----
-
-## Defense Strategy
-
-### Adversarial Training (AT)
-
-The model is re-trained by **augmenting each mini-batch with adversarial examples** generated on-the-fly:
-
-```
-min_θ  E_(x,y)~D [ max_{δ ∈ S} L(θ, x+δ, y) ]
-```
-
-Two variants are included:
-
-| Variant | Attack used to generate training examples | Speed | Robustness |
-|---|---|---|---|
-| **FGSM-AT** | FGSM | Fast | Moderate |
-| **PGD-AT** | PGD (7 steps) | Slower | Strong |
-
-**Trade-off:** Adversarially trained models typically show a 2–10% drop in clean accuracy in exchange for significantly improved robustness (reduced accuracy under attack goes from near-0% to 40–80% depending on ε and dataset).
-
----
-
-## Results & Outputs
-
-All generated outputs are saved automatically:
-
-| Output | Location | Description |
+| Stage | Folder | Script |
 |---|---|---|
-| Model checkpoints | `src/results/checkpoints/` | `.pt` files for baseline and adversarially trained models |
-| Evaluation Metrics | `src/results/` | `.json` files containing accuracy numbers for clean and adversarial runs |
-| Accuracy vs. ε curves | `src/reports/figures/` | PNG plots showing model accuracy as ε increases |
-| Adversarial example grids | `src/reports/figures/` | Visual comparison of clean vs. perturbed images |
+| MNIST baseline | `scripts/training/` | `train_MNIST_clean.py` |
+| CIFAR-10 baseline | `scripts/training/` | `training cnn on clear cifar10.py` |
+| Defense training | `scripts/training/` | `train_adversarial_cifar.py` |
+| Mixed-AT training | `scripts/training/` | `mixed_CIFAR.py` |
+| Evaluation | `scripts/evaluation/` | `evaluate_all_cifar.py` |
+| Visualization | `scripts/visualization/` | `plot_results_cifar.py` |
+
+Example:
+
+```bash
+cd scripts/training
+python train_adversarial_cifar.py
+```
+
+For files with spaces in their names, use quotes:
+
+```bash
+cd scripts/training
+python "training cnn on clear cifar10.py"
+```
 
 ---
 
-## Datasets
+## Expected Outputs
 
-| Dataset | Classes | Image Size | Split | Source |
-|---|---|---|---|---|
-| **MNIST** | 10 (digits 0–9) | 28×28 grayscale | 50k train / 10k val / 10k test | Auto-downloaded to `src/data/MNIST/raw/` |
-| **CIFAR-10** | 10 (objects) | 32×32 RGB | 50k train / 10k test | Auto-downloaded via `torchvision.datasets.CIFAR10` |
+| Artifact | Purpose |
+|---|---|
+| Full evaluation JSON | Final clean, FGSM, and PGD accuracy values for all evaluated models |
+| Baseline metrics JSON | Per-epoch loss and accuracy for the clean baseline |
+| FGSM-AT metrics JSON | Per-epoch loss and accuracy for FGSM adversarial training |
+| PGD-AT metrics JSON | Per-epoch loss and accuracy for PGD adversarial training |
+| Mixed-AT metrics JSON | Per-epoch loss and accuracy for Mixed-AT |
+| Model checkpoints | Saved model weights |
+| `reports/figures/` | Exported plots used in the final report and presentation |
 
-Datasets will be downloaded to the `src/data/` subdirectory automatically when you run the training scripts for the first time. No manual download required.
+Large generated artifacts such as datasets, compressed archives, and checkpoints should be excluded from version control.
+
+---
+
+## Key Findings
+
+1. Clean accuracy alone is not enough for evaluating image classifiers.
+2. The CIFAR-10 clean baseline reaches 78.22% accuracy, but drops to 0.00% under PGD at ε = 8/255.
+3. Adversarial training substantially improves robustness.
+4. FGSM-AT and PGD-AT give the strongest PGD robustness.
+5. Mixed-AT gives the best clean accuracy among defended models.
+6. Robustness improvements come with a clear clean-accuracy cost.
+
+---
+
+## Limitations and Future Work
+
+This project is a course-scale reproducible study, not a full publication-level robustness benchmark. Future work should include:
+
+- Evaluating stronger architectures such as ResNet or WideResNet.
+- Adding stronger attacks such as AutoAttack, DeepFool, and Carlini-Wagner.
+- Running multiple random seeds and reporting mean ± standard deviation.
+- Testing more ablations on model capacity, dropout, augmentation, training epsilon, and perturbation budgets.
+- Profiling runtime, memory usage, and GPU/CPU efficiency.
+- Comparing against published robust CIFAR-10 baselines.
+- Further investigating Mixed-AT by varying clean/FGSM/PGD mixing ratios.
+
+---
+
+## Use of GenAI Tools
+
+The team implemented the experiments, generated the results, and verified all reported numbers using the project code, saved JSON metrics, and generated figures. OpenAI ChatGPT (GPT-5.5) was used for language polishing, LaTeX organization, presentation clarity, and assistance with minor code modifications and debugging suggestions. All suggested code changes were reviewed, executed, and validated by the team. All technical decisions, experimental results, numerical values, and final analysis remain the responsibility of the authors.
 
 ---
 
 ## References
 
-- Goodfellow et al. — *Explaining and Harnessing Adversarial Examples* (ICLR 2015) — FGSM
-- Madry et al. — *Towards Deep Learning Models Resistant to Adversarial Attacks* (ICLR 2018) — PGD & adversarial training
-- LeCun et al. — *Gradient-Based Learning Applied to Document Recognition* (1998) — MNIST
-- Krizhevsky — *Learning Multiple Layers of Features from Tiny Images* (2009) — CIFAR-10
+- C. Szegedy et al., “Intriguing properties of neural networks,” ICLR, 2014.
+- I. J. Goodfellow, J. Shlens, and C. Szegedy, “Explaining and harnessing adversarial examples,” ICLR, 2015.
+- A. Madry et al., “Towards deep learning models resistant to adversarial attacks,” ICLR, 2018.
+- N. Carlini and D. Wagner, “Towards evaluating the robustness of neural networks,” IEEE Symposium on Security and Privacy, 2017.
+- Y. LeCun et al., “Gradient-based learning applied to document recognition,” Proceedings of the IEEE, 1998.
+- A. Krizhevsky, “Learning multiple layers of features from tiny images,” University of Toronto, 2009.
+- F. Croce and M. Hein, “Reliable evaluation of adversarial robustness with an ensemble of diverse parameter-free attacks,” ICML, 2020.
 
 ---
 
 ## License
 
-This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
-
----
-
-*Built with PyTorch · Conda*
+This project is licensed under the MIT License. See the `LICENSE` file for details.
